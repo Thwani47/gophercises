@@ -12,6 +12,33 @@ func main() {
 
 	flag.Parse()
 
+	lines := readFile(fileName)
+
+	problems := ParseLines(lines)
+
+	correct := startQuiz(problems)
+
+	fmt.Printf("You got %d out of %d correct.\n", correct, len(problems))
+}
+
+func startQuiz(problems []Problem) int {
+	correct := 0
+	for i, problem := range problems {
+		fmt.Printf("Problem #%d: %s = \n", i+1, problem.question)
+
+		var ans string
+
+		fmt.Scanf("%s\n", &ans)
+
+		if ans == problem.answer {
+			correct += 1
+		}
+	}
+
+	return correct
+}
+
+func readFile(fileName *string) [][]string {
 	file, err := os.Open(*fileName)
 
 	if err != nil {
@@ -26,22 +53,7 @@ func main() {
 		exit("Failed to parse the provided CSV file.")
 	}
 
-	problems := ParseLines(lines)
-
-	correct := 0
-	for i, problem := range problems {
-		fmt.Printf("Problem #%d: %s = \n", i+1, problem.question)
-
-		var ans string
-
-		fmt.Scanf("%s\n", &ans)
-
-		if ans == problem.answer {
-			correct += 1
-		}
-	}
-
-	fmt.Printf("You got %d out of %d correct.\n", correct, len(problems))
+	return lines
 }
 
 func exit(msg string) {
